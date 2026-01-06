@@ -1,376 +1,363 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="1561.61">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 21.0px; font: 14.0px Menlo; color: #808080; -webkit-text-stroke: #808080}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 21.0px; font: 14.0px Menlo; color: #800000; -webkit-text-stroke: #800000}
-    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 21.0px; font: 14.0px Menlo; color: #ff0000; -webkit-text-stroke: #ff0000}
-    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 21.0px; font: 14.0px Menlo; color: #0000ff; -webkit-text-stroke: #0000ff}
-    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 21.0px; font: 14.0px Menlo; color: #000000; -webkit-text-stroke: #000000}
-    p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 21.0px; font: 14.0px Menlo; color: #188038; -webkit-text-stroke: #188038}
-    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 21.0px; font: 14.0px Menlo; color: #000000; -webkit-text-stroke: #000000; min-height: 16.0px}
-    p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 21.0px; font: 14.0px Menlo; color: #0451a5; -webkit-text-stroke: #0451a5}
-    p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 21.0px; font: 14.0px Menlo; color: #5f6368; -webkit-text-stroke: #5f6368}
-    p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 21.0px; font: 14.0px 'Sinhala Sangam MN'; color: #000000; -webkit-text-stroke: #000000}
-    span.s1 {font-kerning: none; background-color: #f0f4f9}
-    span.s2 {font-kerning: none; color: #ff0000; background-color: #f0f4f9; -webkit-text-stroke: 0px #ff0000}
-    span.s3 {font-kerning: none; color: #383838; background-color: #f0f4f9; -webkit-text-stroke: 0px #383838}
-    span.s4 {font-kerning: none; color: #000000; background-color: #f0f4f9; -webkit-text-stroke: 0px #000000}
-    span.s5 {font-kerning: none; color: #0000ff; background-color: #f0f4f9; -webkit-text-stroke: 0px #0000ff}
-    span.s6 {font-kerning: none; color: #800000; background-color: #f0f4f9; -webkit-text-stroke: 0px #800000}
-    span.s7 {font-kerning: none; color: #8430ce; background-color: #f0f4f9; -webkit-text-stroke: 0px #8430ce}
-    span.s8 {font-kerning: none; color: #0451a5; background-color: #f0f4f9; -webkit-text-stroke: 0px #0451a5}
-    span.s9 {font-kerning: none; color: #188038; background-color: #f0f4f9; -webkit-text-stroke: 0px #188038}
-    span.s10 {font-kerning: none; color: #098658; background-color: #f0f4f9; -webkit-text-stroke: 0px #098658}
-    span.s11 {font-kerning: none}
-    span.s12 {font: 14.0px 'Sinhala Sangam MN'; font-kerning: none; color: #000000; background-color: #f0f4f9; -webkit-text-stroke: 0px #000000}
-    span.s13 {font: 14.0px Menlo; font-kerning: none; background-color: #f0f4f9}
-    span.s14 {font-kerning: none; color: #008080; background-color: #f0f4f9; -webkit-text-stroke: 0px #008080}
-    span.s15 {font-kerning: none; color: #b55908; background-color: #f0f4f9; -webkit-text-stroke: 0px #b55908}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SL-MET Live Sector Watch | ABIO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+Sinhala:wght@400;700&display=swap');
+        
+        body { background-color: #050505; font-family: 'Inter', sans-serif; }
+        .sinhala { font-family: 'Noto Sans Sinhala', sans-serif; }
+        
+        #map { 
+            height: 50vh; 
+            min-height: 400px;
+            width: 100%; 
+            border-radius: 12px; 
+            background: #1a1a1a;
+            border: 1px solid #333;
+        }
+
+        @media (min-width: 1024px) {
+            #map {
+                height: 600px;
+            }
+        }
+        
+        .pulse-alert { animation: pulse-alert 2s infinite; }
+        @keyframes pulse-alert {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #111; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+    </style>
 </head>
-<body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE</span><span class="s2"> html</span><span class="s1">&gt;</span></p>
-<p class="p2"><span class="s3">&lt;</span><span class="s1">html</span><span class="s4"> </span><span class="s2">lang</span><span class="s3">=</span><span class="s5">"en"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s3">&lt;</span><span class="s1">head</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">meta</span><span class="s4"> </span><span class="s1">charset</span><span class="s3">=</span><span class="s5">"UTF-8"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">meta</span><span class="s4"> </span><span class="s2">name</span><span class="s3">=</span><span class="s1">"viewport"</span><span class="s4"> </span><span class="s2">content</span><span class="s3">=</span><span class="s1">"width=device-width, initial-scale=1.0"</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">title</span><span class="s3">&gt;</span><span class="s1">SL-MET Live Sector Watch | ABIO</span><span class="s3">&lt;/</span><span class="s6">title</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">script</span><span class="s4"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://cdn.tailwindcss.com"</span><span class="s3">&gt;&lt;/</span><span class="s6">script</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">link</span><span class="s4"> </span><span class="s2">rel</span><span class="s3">=</span><span class="s1">"stylesheet"</span><span class="s4"> </span><span class="s2">href</span><span class="s3">=</span><span class="s1">"https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"</span><span class="s4"> </span><span class="s3">/&gt;</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s1">style</span><span class="s3">&gt;</span></p>
-<p class="p6"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s7">@import</span><span class="s4"> </span><span class="s8">url</span><span class="s4">(</span><span class="s1">'https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&amp;family=Noto+Sans+Sinhala:wght@400;700&amp;display=swap'</span><span class="s4">);</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s6">body</span><span class="s4"> { </span><span class="s1">background-color:</span><span class="s4"> </span><span class="s8">#050505</span><span class="s4">; </span><span class="s1">font-family:</span><span class="s4"> </span><span class="s9">'Inter'</span><span class="s4">, </span><span class="s8">sans-serif</span><span class="s4">; }</span></p>
-<p class="p6"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s6">.sinhala</span><span class="s4"> { </span><span class="s2">font-family:</span><span class="s4"> </span><span class="s1">'Noto Sans Sinhala'</span><span class="s4">, </span><span class="s8">sans-serif</span><span class="s4">; }</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s6">#map</span><span class="s1"> {<span class="Apple-converted-space"> </span></span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">height:</span><span class="s1"> </span><span class="s10">600px</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">width:</span><span class="s1"> </span><span class="s10">100%</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">border-radius:</span><span class="s1"> </span><span class="s10">12px</span><span class="s1">;<span class="Apple-converted-space"> </span></span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">background:</span><span class="s1"> </span><span class="s8">#1a1a1a</span><span class="s1">;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">border:</span><span class="s1"> </span><span class="s10">1px</span><span class="s1"> </span><span class="s8">solid</span><span class="s1"> </span><span class="s8">#333</span><span class="s1">;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p8"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s6">.pulse-alert</span><span class="s4"> { </span><span class="s2">animation:</span><span class="s4"> </span><span class="s1">pulse-alert</span><span class="s4"> </span><span class="s10">2s</span><span class="s4"> </span><span class="s1">infinite</span><span class="s4">; }</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">@keyframes</span><span class="s1"> </span><span class="s8">pulse-alert</span><span class="s1"> {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s10">0%</span><span class="s1"> { </span><span class="s2">box-shadow:</span><span class="s1"> </span><span class="s10">0</span><span class="s1"> </span><span class="s10">0</span><span class="s1"> </span><span class="s10">0</span><span class="s1"> </span><span class="s10">0</span><span class="s1"> </span><span class="s8">rgba(</span><span class="s10">239</span><span class="s1">, </span><span class="s10">68</span><span class="s1">, </span><span class="s10">68</span><span class="s1">, </span><span class="s10">0.7</span><span class="s8">)</span><span class="s1">; }</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s10">70%</span><span class="s1"> { </span><span class="s2">box-shadow:</span><span class="s1"> </span><span class="s10">0</span><span class="s1"> </span><span class="s10">0</span><span class="s1"> </span><span class="s10">0</span><span class="s1"> </span><span class="s10">15px</span><span class="s1"> </span><span class="s8">rgba(</span><span class="s10">239</span><span class="s1">, </span><span class="s10">68</span><span class="s1">, </span><span class="s10">68</span><span class="s1">, </span><span class="s10">0</span><span class="s8">)</span><span class="s1">; }</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s10">100%</span><span class="s1"> { </span><span class="s2">box-shadow:</span><span class="s1"> </span><span class="s10">0</span><span class="s1"> </span><span class="s10">0</span><span class="s1"> </span><span class="s10">0</span><span class="s1"> </span><span class="s10">0</span><span class="s1"> </span><span class="s8">rgba(</span><span class="s10">239</span><span class="s1">, </span><span class="s10">68</span><span class="s1">, </span><span class="s10">68</span><span class="s1">, </span><span class="s10">0</span><span class="s8">)</span><span class="s1">; }</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">.custom-scrollbar::-webkit-scrollbar</span><span class="s4"> { </span><span class="s2">width:</span><span class="s4"> </span><span class="s10">4px</span><span class="s4">; }</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">.custom-scrollbar::-webkit-scrollbar-track</span><span class="s4"> { </span><span class="s2">background:</span><span class="s4"> </span><span class="s8">#111</span><span class="s4">; }</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">.custom-scrollbar::-webkit-scrollbar-thumb</span><span class="s4"> { </span><span class="s2">background:</span><span class="s4"> </span><span class="s8">#333</span><span class="s4">; </span><span class="s2">border-radius:</span><span class="s4"> </span><span class="s10">10px</span><span class="s4">; }</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s1">style</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s3">&lt;/</span><span class="s1">head</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s3">&lt;</span><span class="s6">body</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-zinc-100 antialiased p-2 md:p-6"</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p9"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">&lt;!-- Header --&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">header</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"max-w-7xl mx-auto mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-zinc-900/50 p-6 rounded-xl border border-zinc-800 backdrop-blur-md"</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex items-center gap-3"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-red-600 text-white px-2 py-0.5 rounded font-black text-[10px] uppercase animate-pulse tracking-tighter text-center"</span><span class="s3">&gt;</span><span class="s4">Live</span><span class="s3">&lt;</span><span class="s6">br</span><span class="s3">&gt;</span><span class="s4">Sector</span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">h1</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-2xl font-black tracking-tight text-white italic leading-none"</span><span class="s3">&gt;</span><span class="s4">SL-MET </span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-yellow-500"</span><span class="s3">&gt;</span><span class="s4">MONITOR</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;&lt;/</span><span class="s6">h1</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">p</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-zinc-500 text-[10px] uppercase tracking-[0.3em] mt-2 font-bold"</span><span class="s3">&gt;</span><span class="s4">ABIO • Jan 06, 2026 Situation</span><span class="s3">&lt;/</span><span class="s6">p</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex flex-wrap items-center gap-6"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-black/40 px-4 py-2 rounded-lg border border-zinc-800"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[9px] text-zinc-500 block uppercase font-bold tracking-widest mb-1"</span><span class="s3">&gt;</span><span class="s4">Next Data Update In</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"next-update-timer"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-lg font-mono text-yellow-500 font-bold tracking-tighter"</span><span class="s3">&gt;</span><span class="s4">00:00:00</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-right hidden sm:block"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[10px] text-zinc-500 block uppercase font-bold tracking-widest"</span><span class="s3">&gt;</span><span class="s4">Global Clock (UTC)</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"utc-clock"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-sm font-mono text-white italic font-bold"</span><span class="s3">&gt;</span><span class="s4">00:00:00</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s1">header</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">main</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6"</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p9"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">&lt;!-- Left Stats --&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"lg:col-span-4 space-y-6"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-zinc-900 p-6 rounded-xl border border-zinc-800 shadow-xl relative overflow-hidden"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex justify-between items-start mb-4"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">h2</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[10px] text-yellow-500 font-bold uppercase tracking-[0.2em]"</span><span class="s3">&gt;</span><span class="s4">Primary Incident</span><span class="s3">&lt;/</span><span class="s6">h2</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"last-updated-stamp"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[9px] font-mono text-zinc-500 bg-black px-2 py-1 rounded"</span><span class="s3">&gt;</span><span class="s4">STAMP: JAN 06 12:00Z</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">h3</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"storm-name"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-4xl font-black text-white uppercase italic mb-1"</span><span class="s3">&gt;</span><span class="s4">---</span><span class="s3">&lt;/</span><span class="s6">h3</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"storm-date"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[10px] text-zinc-500 font-bold mb-6 border-b border-zinc-800 pb-2 italic"</span><span class="s3">&gt;</span><span class="s4">Observation: ----</span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"grid grid-cols-2 gap-3 mb-6"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-black p-4 rounded-lg border border-zinc-800"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[9px] text-zinc-500 uppercase block font-bold mb-1"</span><span class="s3">&gt;</span><span class="s4">Max Winds</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"storm-wind"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-2xl font-black text-emerald-400"</span><span class="s3">&gt;</span><span class="s4">--</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[10px] text-zinc-600 font-bold ml-1 italic"</span><span class="s3">&gt;</span><span class="s4">KTS</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-black p-4 rounded-lg border border-zinc-800"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[9px] text-zinc-500 uppercase block font-bold mb-1"</span><span class="s3">&gt;</span><span class="s4">Central Press</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"storm-pressure"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-2xl font-black text-cyan-400"</span><span class="s3">&gt;</span><span class="s4">----</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[10px] text-zinc-600 font-bold ml-1 italic"</span><span class="s3">&gt;</span><span class="s4">HPA</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"col-span-2 bg-zinc-950 p-4 rounded-lg border border-zinc-800"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex justify-between items-center"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                            </span></span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[9px] text-zinc-500 uppercase font-bold"</span><span class="s3">&gt;</span><span class="s4">Dist. to Colombo</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                            </span></span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[8px] text-red-500 font-black animate-pulse"</span><span class="s3">&gt;</span><span class="s4">! CRITICAL ALERT</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"storm-dist"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-3xl font-black text-white"</span><span class="s3">&gt;</span><span class="s4">----</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[10px] text-zinc-500 font-bold uppercase ml-2 italic underline underline-offset-4"</span><span class="s3">&gt;</span><span class="s4">Kilometers</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"p-4 bg-zinc-800/30 rounded border border-zinc-700"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">h4</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[10px] text-yellow-500 font-bold uppercase mb-2"</span><span class="s3">&gt;</span><span class="s4">Technical Impact Analysis</span><span class="s3">&lt;/</span><span class="s6">h4</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">p</span><span class="s1"> </span><span class="s2">id</span><span class="s3">=</span><span class="s5">"storm-impact"</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s5">"text-xs text-zinc-300 leading-relaxed italic"</span><span class="s3">&gt;</span><span class="s1">Monitoring regional circulation. System tracking west-northwest.</span><span class="s3">&lt;/</span><span class="s6">p</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p9"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">&lt;!-- List Feed --&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-zinc-900/50 p-6 rounded-xl border border-zinc-800"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">h2</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[10px] text-zinc-500 font-bold uppercase tracking-[0.3em] mb-4"</span><span class="s3">&gt;</span><span class="s4">Active Incident List</span><span class="s3">&lt;/</span><span class="s6">h2</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"system-feed"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"space-y-3 max-h-[250px] overflow-y-auto pr-2 custom-scrollbar"</span><span class="s3">&gt;&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p9"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">&lt;!-- Map &amp; Sinhala Advisory --&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"lg:col-span-8 space-y-4"</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s5">"relative"</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s1"> </span><span class="s2">id</span><span class="s3">=</span><span class="s5">"map"</span><span class="s3">&gt;&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"absolute top-4 right-4 z-[1000] flex flex-wrap justify-end gap-2"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">button</span><span class="s4"> </span><span class="s2">onclick</span><span class="s3">=</span><span class="s1">"toggleSpaghetti()"</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"spaghetti-btn"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-yellow-500/10 hover:bg-yellow-500 text-yellow-500 hover:text-black px-3 py-1.5 rounded border border-yellow-500/30 text-[10px] font-black transition-all tracking-widest uppercase"</span><span class="s3">&gt;</span><span class="s4">Possible Paths</span><span class="s3">&lt;/</span><span class="s6">button</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">button</span><span class="s4"> </span><span class="s2">onclick</span><span class="s3">=</span><span class="s1">"changeMap('topo')"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-black/90 hover:bg-zinc-700 text-white px-3 py-1.5 rounded border border-zinc-700 text-[10px] font-black transition-all tracking-widest"</span><span class="s3">&gt;</span><span class="s4">SATELLITE</span><span class="s3">&lt;/</span><span class="s6">button</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">button</span><span class="s4"> </span><span class="s2">onclick</span><span class="s3">=</span><span class="s1">"changeMap('standard')"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-black/90 hover:bg-zinc-700 text-white px-3 py-1.5 rounded border border-zinc-700 text-[10px] font-black transition-all tracking-widest"</span><span class="s3">&gt;</span><span class="s4">TERRAIN</span><span class="s3">&lt;/</span><span class="s6">button</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p9"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s1">&lt;!-- Model Legend Overlay --&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"model-legend"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"hidden absolute bottom-4 left-4 z-[1000] bg-black/80 p-3 rounded-lg border border-zinc-800 backdrop-blur-sm"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">p</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1"</span><span class="s3">&gt;</span><span class="s4">Mathematical Models</span><span class="s3">&lt;/</span><span class="s6">p</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">p</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s5">"text-[7px] text-zinc-400 mb-2 uppercase"</span><span class="s3">&gt;</span><span class="s1">Ensemble Forecast Tracks</span><span class="s3">&lt;/</span><span class="s6">p</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s5">"flex gap-4"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex items-center gap-2"</span><span class="s3">&gt;&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"w-3 h-0.5 bg-blue-500"</span><span class="s3">&gt;&lt;/</span><span class="s6">span</span><span class="s3">&gt;&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[9px] font-bold"</span><span class="s3">&gt;</span><span class="s4">GFS</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex items-center gap-2"</span><span class="s3">&gt;&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"w-3 h-0.5 bg-green-500"</span><span class="s3">&gt;&lt;/</span><span class="s6">span</span><span class="s3">&gt;&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[9px] font-bold"</span><span class="s3">&gt;</span><span class="s4">ECMWF</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex items-center gap-2"</span><span class="s3">&gt;&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"w-3 h-0.5 bg-red-500"</span><span class="s3">&gt;&lt;/</span><span class="s6">span</span><span class="s3">&gt;&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[9px] font-bold"</span><span class="s3">&gt;</span><span class="s4">HWRF</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex items-center gap-2"</span><span class="s3">&gt;&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"w-3 h-0.5 bg-yellow-500"</span><span class="s3">&gt;&lt;/</span><span class="s6">span</span><span class="s3">&gt;&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[9px] font-bold"</span><span class="s3">&gt;</span><span class="s4">UKMET</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p9"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">&lt;!-- Sinhala Advisory Section --&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-zinc-900/80 p-6 rounded-xl border border-zinc-800 shadow-2xl backdrop-blur-md"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex items-center gap-4 mb-4 border-b border-zinc-800 pb-3"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-yellow-500 text-black px-3 py-1 rounded font-black text-xs uppercase italic"</span><span class="s3">&gt;</span><span class="s4">Alert / </span><span class="s12">අනතුරු</span><span class="s4"> </span><span class="s12">ඇඟවීම</span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">h2</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"sinhala text-lg font-bold text-white tracking-tight leading-none"</span><span class="s3">&gt;</span><span class="s12">විශේෂ</span><span class="s4"> </span><span class="s12">කාලගුණ</span><span class="s4"> </span><span class="s12">නිවේදනය</span><span class="s4"> - </span><span class="s12">ශ්‍රී</span><span class="s4"> </span><span class="s12">ලංකා</span><span class="s4"> </span><span class="s12">කලාපය</span><span class="s3">&lt;/</span><span class="s6">h2</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"grid grid-cols-1 md:grid-cols-2 gap-6"</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s5">"sinhala"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">p</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[10px] text-zinc-500 uppercase font-bold mb-2 tracking-widest"</span><span class="s3">&gt;</span><span class="s4">Fishermen Advisory / </span><span class="s12">ධීවර</span><span class="s4"> </span><span class="s12">ප්‍රජාවට</span><span class="s4"> </span><span class="s12">උපදෙස්</span><span class="s3">&lt;/</span><span class="s6">p</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">p</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-sm text-zinc-300 leading-relaxed"</span><span class="s3">&gt;</span></p>
-<p class="p10"><span class="s13"><span class="Apple-converted-space">                            </span></span><span class="s1">දිවයිනට</span><span class="s13"> </span><span class="s1">ගිනිකොණ</span><span class="s13"> </span><span class="s1">දෙසින්</span><span class="s13"> </span><span class="s1">පවතින</span><span class="s13"> </span><span class="s1">අඩු</span><span class="s13"> </span><span class="s1">පීඩන</span><span class="s13"> </span><span class="s1">කලාපය</span><span class="s13"> (Invest 90B) </span><span class="s1">හේතුවෙන්</span><span class="s13"> </span><span class="s1">දිවයින</span><span class="s13"> </span><span class="s1">වටා</span><span class="s13"> </span><span class="s1">වන</span><span class="s13"> </span><span class="s1">මුහුදු</span><span class="s13"> </span><span class="s1">ප්‍රදේශවල</span><span class="s13"> </span><span class="s1">සුළඟේ</span><span class="s13"> </span><span class="s1">වේගය</span><span class="s13"> </span><span class="s1">පැ</span><span class="s13">.</span><span class="s1">කි</span><span class="s13">.</span><span class="s1">මී</span><span class="s13"> 50-60 </span><span class="s1">දක්වා</span><span class="s13"> </span><span class="s1">ඉහළ</span><span class="s13"> </span><span class="s1">යා</span><span class="s13"> </span><span class="s1">හැක</span><span class="s13">. </span><span class="s1">මුහුදු</span><span class="s13"> </span><span class="s1">ප්‍රදේශ</span><span class="s13"> </span><span class="s1">ඉතා</span><span class="s13"> </span><span class="s1">රළු</span><span class="s13"> </span><span class="s1">විය</span><span class="s13"> </span><span class="s1">හැකි</span><span class="s13"> </span><span class="s1">බැවින්</span><span class="s13"> </span><span class="s1">ධීවර</span><span class="s13"> </span><span class="s1">සහ</span><span class="s13"> </span><span class="s1">නාවික</span><span class="s13"> </span><span class="s1">ප්‍රජාව</span><span class="s13"> </span><span class="s1">මේ</span><span class="s13"> </span><span class="s1">පිළිබඳ</span><span class="s13"> </span><span class="s1">අවධානයෙන්</span><span class="s13"> </span><span class="s1">පසුවිය</span><span class="s13"> </span><span class="s1">යුතුය</span><span class="s13">.</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;/</span><span class="s6">p</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"sinhala border-l border-zinc-800 pl-0 md:pl-6"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">p</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[10px] text-zinc-500 uppercase font-bold mb-2 tracking-widest"</span><span class="s3">&gt;</span><span class="s4">Public Safety / </span><span class="s12">මහජන</span><span class="s4"> </span><span class="s12">ආරක්ෂාව</span><span class="s3">&lt;/</span><span class="s6">p</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">p</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-sm text-zinc-300 leading-relaxed"</span><span class="s3">&gt;</span></p>
-<p class="p10"><span class="s13"><span class="Apple-converted-space">                            </span></span><span class="s1">විශේෂයෙන්</span><span class="s13"> </span><span class="s1">උතුරු</span><span class="s13">, </span><span class="s1">නැගෙනහිර</span><span class="s13"> </span><span class="s1">සහ</span><span class="s13"> </span><span class="s1">දකුණු</span><span class="s13"> </span><span class="s1">පළාත්වල</span><span class="s13"> </span><span class="s1">තද</span><span class="s13"> </span><span class="s1">වැසි</span><span class="s13"> </span><span class="s1">සහ</span><span class="s13"> </span><span class="s1">තාවකාලික</span><span class="s13"> </span><span class="s1">තද</span><span class="s13"> </span><span class="s1">සුළං</span><span class="s13"> </span><span class="s1">ඇතිවිය</span><span class="s13"> </span><span class="s1">හැක</span><span class="s13">. </span><span class="s1">අකුණු</span><span class="s13"> </span><span class="s1">අනතුරු</span><span class="s13"> </span><span class="s1">අවම</span><span class="s13"> </span><span class="s1">කර</span><span class="s13"> </span><span class="s1">ගැනීමට</span><span class="s13"> </span><span class="s1">අවශ්‍ය</span><span class="s13"> </span><span class="s1">පියවර</span><span class="s13"> </span><span class="s1">ගන්නා</span><span class="s13"> </span><span class="s1">ලෙස</span><span class="s13"> </span><span class="s1">මහජනතාවගෙන්</span><span class="s13"> </span><span class="s1">ඉල්ලා</span><span class="s13"> </span><span class="s1">සිටිනු</span><span class="s13"> </span><span class="s1">ලැබේ</span><span class="s13">.</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;/</span><span class="s6">p</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s6">main</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">script</span><span class="s4"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"</span><span class="s3">&gt;&lt;/</span><span class="s6">script</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s1">script</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">const</span><span class="s1"> </span><span class="s14">COLOMBO_REF</span><span class="s1"> = [</span><span class="s15">6.9271</span><span class="s1">, </span><span class="s15">79.8612</span><span class="s1">];</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">let</span><span class="s1"> showSpaghetti = </span><span class="s7">false</span><span class="s1">;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">let</span><span class="s1"> spaghettiLayers = [];</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p9"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">// Latest Real Info: Jan 06, 2026</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">const</span><span class="s1"> activeSystems = [</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>id: </span><span class="s9">"INVEST 90B"</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>name: </span><span class="s9">"LOW PRESSURE AREA"</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>lat: </span><span class="s15">5.2</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>lng: </span><span class="s15">88.1</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>wind: </span><span class="s15">25</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>pressure: </span><span class="s15">1007</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>date: </span><span class="s9">"2026-01-06 12:00 UTC"</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>status: </span><span class="s9">"Developing Invest"</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>color: </span><span class="s9">"#eab308"</span><span class="s1">,</span></p>
-<p class="p6"><span class="s4"><span class="Apple-converted-space">                </span>impact: </span><span class="s1">"Broad low-level circulation. Tracking West-Northwest toward SL. Models suggest gradual consolidation."</span><span class="s4">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>alert: </span><span class="s9">"WATCH"</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>spaghetti: [</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>{ model: </span><span class="s9">'GFS'</span><span class="s1">, color: </span><span class="s9">'#3b82f6'</span><span class="s1">, path: [[</span><span class="s15">5.2</span><span class="s1">, </span><span class="s15">88.1</span><span class="s1">], [</span><span class="s15">6.0</span><span class="s1">, </span><span class="s15">86.0</span><span class="s1">], [</span><span class="s15">7.2</span><span class="s1">, </span><span class="s15">83.5</span><span class="s1">], [</span><span class="s15">8.5</span><span class="s1">, </span><span class="s15">81.2</span><span class="s1">], [</span><span class="s15">9.8</span><span class="s1">, </span><span class="s15">80.0</span><span class="s1">]] },</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>{ model: </span><span class="s9">'GFS'</span><span class="s1">, color: </span><span class="s9">'#3b82f6'</span><span class="s1">, path: [[</span><span class="s15">5.2</span><span class="s1">, </span><span class="s15">88.1</span><span class="s1">], [</span><span class="s15">5.8</span><span class="s1">, </span><span class="s15">85.5</span><span class="s1">], [</span><span class="s15">6.5</span><span class="s1">, </span><span class="s15">82.0</span><span class="s1">], [</span><span class="s15">7.0</span><span class="s1">, </span><span class="s15">79.5</span><span class="s1">]] },</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>{ model: </span><span class="s9">'ECMWF'</span><span class="s1">, color: </span><span class="s9">'#22c55e'</span><span class="s1">, path: [[</span><span class="s15">5.2</span><span class="s1">, </span><span class="s15">88.1</span><span class="s1">], [</span><span class="s15">5.5</span><span class="s1">, </span><span class="s15">85.0</span><span class="s1">], [</span><span class="s15">6.2</span><span class="s1">, </span><span class="s15">81.5</span><span class="s1">], [</span><span class="s15">6.8</span><span class="s1">, </span><span class="s15">78.5</span><span class="s1">]] },</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>{ model: </span><span class="s9">'ECMWF'</span><span class="s1">, color: </span><span class="s9">'#22c55e'</span><span class="s1">, path: [[</span><span class="s15">5.2</span><span class="s1">, </span><span class="s15">88.1</span><span class="s1">], [</span><span class="s15">6.5</span><span class="s1">, </span><span class="s15">87.0</span><span class="s1">], [</span><span class="s15">8.0</span><span class="s1">, </span><span class="s15">86.5</span><span class="s1">], [</span><span class="s15">10.5</span><span class="s1">, </span><span class="s15">86.0</span><span class="s1">]] },<span class="Apple-converted-space"> </span></span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>{ model: </span><span class="s9">'HWRF'</span><span class="s1">, color: </span><span class="s9">'#ef4444'</span><span class="s1">, path: [[</span><span class="s15">5.2</span><span class="s1">, </span><span class="s15">88.1</span><span class="s1">], [</span><span class="s15">5.9</span><span class="s1">, </span><span class="s15">84.0</span><span class="s1">], [</span><span class="s15">7.5</span><span class="s1">, </span><span class="s15">81.8</span><span class="s1">]] },</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>{ model: </span><span class="s9">'UKMET'</span><span class="s1">, color: </span><span class="s9">'#eab308'</span><span class="s1">, path: [[</span><span class="s15">5.2</span><span class="s1">, </span><span class="s15">88.1</span><span class="s1">], [</span><span class="s15">5.3</span><span class="s1">, </span><span class="s15">85.0</span><span class="s1">], [</span><span class="s15">5.5</span><span class="s1">, </span><span class="s15">82.0</span><span class="s1">], [</span><span class="s15">5.8</span><span class="s1">, </span><span class="s15">80.0</span><span class="s1">]] }</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>]</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>},</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>{</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>id: </span><span class="s9">"CYC-JENNA"</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>name: </span><span class="s9">"CYC JENNA (S.I.O)"</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>lat: -</span><span class="s15">16.3</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>lng: </span><span class="s15">94.1</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>wind: </span><span class="s15">90</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>pressure: </span><span class="s15">968</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>date: </span><span class="s9">"2026-01-06 12:00 UTC"</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>status: </span><span class="s9">"Severe Cyclone"</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>color: </span><span class="s9">"#dc2626"</span><span class="s1">,</span></p>
-<p class="p6"><span class="s4"><span class="Apple-converted-space">                </span>impact: </span><span class="s1">"Intense system south of Cocos Islands. Tracking SW at 15km/h. Rapid weakening expected in 48h."</span><span class="s4">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>alert: </span><span class="s9">"MONITOR"</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>spaghetti: [</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>{ model: </span><span class="s9">'GEFS'</span><span class="s1">, color: </span><span class="s9">'#3b82f6'</span><span class="s1">, path: [[-</span><span class="s15">16.3</span><span class="s1">, </span><span class="s15">94.1</span><span class="s1">], [-</span><span class="s15">18.5</span><span class="s1">, </span><span class="s15">92.0</span><span class="s1">], [-</span><span class="s15">21.0</span><span class="s1">, </span><span class="s15">90.5</span><span class="s1">]] },</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>{ model: </span><span class="s9">'GEFS'</span><span class="s1">, color: </span><span class="s9">'#3b82f6'</span><span class="s1">, path: [[-</span><span class="s15">16.3</span><span class="s1">, </span><span class="s15">94.1</span><span class="s1">], [-</span><span class="s15">17.5</span><span class="s1">, </span><span class="s15">93.0</span><span class="s1">], [-</span><span class="s15">19.0</span><span class="s1">, </span><span class="s15">91.5</span><span class="s1">]] }</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>]</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>];</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> calculateDistance(lat1, lon1, lat2, lon2) {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> </span><span class="s14">R</span><span class="s1"> = </span><span class="s15">6371</span><span class="s1">;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> dLat = (lat2 - lat1) * </span><span class="s14">Math</span><span class="s1">.</span><span class="s14">PI</span><span class="s1"> / </span><span class="s15">180</span><span class="s1">;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> dLon = (lon2 - lon1) * </span><span class="s14">Math</span><span class="s1">.</span><span class="s14">PI</span><span class="s1"> / </span><span class="s15">180</span><span class="s1">;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> a = </span><span class="s14">Math</span><span class="s1">.sin(dLat / </span><span class="s15">2</span><span class="s1">) * </span><span class="s14">Math</span><span class="s1">.sin(dLat / </span><span class="s15">2</span><span class="s1">) +</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                      </span></span><span class="s14">Math</span><span class="s1">.cos(lat1 * </span><span class="s14">Math</span><span class="s1">.</span><span class="s14">PI</span><span class="s1"> / </span><span class="s15">180</span><span class="s1">) * </span><span class="s14">Math</span><span class="s1">.cos(lat2 * </span><span class="s14">Math</span><span class="s1">.</span><span class="s14">PI</span><span class="s1"> / </span><span class="s15">180</span><span class="s1">) *</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                      </span></span><span class="s14">Math</span><span class="s1">.sin(dLon / </span><span class="s15">2</span><span class="s1">) * </span><span class="s14">Math</span><span class="s1">.sin(dLon / </span><span class="s15">2</span><span class="s1">);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">return</span><span class="s1"> </span><span class="s14">Math</span><span class="s1">.round(</span><span class="s14">R</span><span class="s1"> * </span><span class="s15">2</span><span class="s1"> * </span><span class="s14">Math</span><span class="s1">.atan2(</span><span class="s14">Math</span><span class="s1">.sqrt(a), </span><span class="s14">Math</span><span class="s1">.sqrt(</span><span class="s15">1</span><span class="s1"> - a)));</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">const</span><span class="s1"> map = </span><span class="s14">L</span><span class="s1">.map(</span><span class="s9">'map'</span><span class="s1">, { zoomControl: </span><span class="s7">false</span><span class="s1"> }).setView([</span><span class="s15">7.8731</span><span class="s1">, </span><span class="s15">80.7718</span><span class="s1">], </span><span class="s15">5</span><span class="s1">);</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">const</span><span class="s1"> tiles = {</span></p>
-<p class="p6"><span class="s4"><span class="Apple-converted-space">            </span>topo: </span><span class="s14">L</span><span class="s4">.tileLayer(</span><span class="s1">'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'</span><span class="s4">, { attribution: </span><span class="s1">'Esri Satellite'</span><span class="s4"> }),</span></p>
-<p class="p6"><span class="s4"><span class="Apple-converted-space">            </span>standard: </span><span class="s14">L</span><span class="s4">.tileLayer(</span><span class="s1">'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'</span><span class="s4">, { attribution: </span><span class="s1">'OpenTopo'</span><span class="s4"> })</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>};</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>tiles.topo.addTo(map);</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> changeMap(key) {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s14">Object</span><span class="s1">.values(tiles).forEach(t =&gt; map.removeLayer(t));</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>tiles[key].addTo(map);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s14">L</span><span class="s1">.circleMarker(</span><span class="s14">COLOMBO_REF</span><span class="s1">, { radius: </span><span class="s15">6</span><span class="s1">, fillColor: </span><span class="s9">"#eab308"</span><span class="s1">, color: </span><span class="s9">"#fff"</span><span class="s1">, weight: </span><span class="s15">2</span><span class="s1">, fillOpacity: </span><span class="s15">1</span><span class="s1"> }).addTo(map).bindTooltip(</span><span class="s9">"&lt;b class='font-black tracking-tighter'&gt;COLOMBO (REF)&lt;/b&gt;"</span><span class="s1">, { permanent: </span><span class="s7">true</span><span class="s1">, direction: </span><span class="s9">'top'</span><span class="s1"> });</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>activeSystems.forEach(sys =&gt; {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> marker = </span><span class="s14">L</span><span class="s1">.circleMarker([sys.lat, sys.lng], {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>radius: </span><span class="s15">12</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>fillColor: sys.color,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>color: </span><span class="s9">"#fff"</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>weight: </span><span class="s15">1</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>fillOpacity: </span><span class="s15">0.9</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>className: sys.wind &gt; </span><span class="s15">30</span><span class="s1"> ? </span><span class="s9">'pulse-alert'</span><span class="s1"> : </span><span class="s9">''</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>}).addTo(map);</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>marker.bindTooltip(</span><span class="s9">`&lt;div class='bg-black p-1 text-[10px] font-black' style='color:</span><span class="s1">${sys.color}</span><span class="s9">'&gt;</span><span class="s1">${sys.id}</span><span class="s9">&lt;/div&gt;`</span><span class="s1">, { permanent: </span><span class="s7">true</span><span class="s1">, direction: </span><span class="s9">'bottom'</span><span class="s1"> });</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>marker.on(</span><span class="s9">'click'</span><span class="s1">, () =&gt; updateDisplay(sys));</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>});</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> toggleSpaghetti() {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>showSpaghetti = !showSpaghetti;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> btn = document.getElementById(</span><span class="s9">'spaghetti-btn'</span><span class="s1">);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> legend = document.getElementById(</span><span class="s9">'model-legend'</span><span class="s1">);</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">if</span><span class="s1"> (showSpaghetti) {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>btn.classList.add(</span><span class="s9">'bg-yellow-500'</span><span class="s1">, </span><span class="s9">'text-black'</span><span class="s1">);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>legend.classList.remove(</span><span class="s9">'hidden'</span><span class="s1">);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>drawSpaghetti();</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>} </span><span class="s7">else</span><span class="s1"> {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>btn.classList.remove(</span><span class="s9">'bg-yellow-500'</span><span class="s1">, </span><span class="s9">'text-black'</span><span class="s1">);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>legend.classList.add(</span><span class="s9">'hidden'</span><span class="s1">);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>clearSpaghetti();</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> drawSpaghetti() {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>clearSpaghetti();</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>activeSystems.forEach(sys =&gt; {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s7">if</span><span class="s1"> (sys.spaghetti) {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>sys.spaghetti.forEach(member =&gt; {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                        </span></span><span class="s7">const</span><span class="s1"> line = </span><span class="s14">L</span><span class="s1">.polyline(member.path, {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                            </span>color: member.color,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                            </span>weight: </span><span class="s15">1.5</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                            </span>opacity: </span><span class="s15">0.6</span><span class="s1">,</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                            </span>dashArray: </span><span class="s9">'5, 5'</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                        </span>}).addTo(map);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                        </span>spaghettiLayers.push(line);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                    </span>});</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> clearSpaghetti() {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>spaghettiLayers.forEach(l =&gt; map.removeLayer(l));</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>spaghettiLayers = [];</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> updateDisplay(sys) {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> dist = calculateDistance(sys.lat, sys.lng, </span><span class="s14">COLOMBO_REF</span><span class="s1">[</span><span class="s15">0</span><span class="s1">], </span><span class="s14">COLOMBO_REF</span><span class="s1">[</span><span class="s15">1</span><span class="s1">]);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById(</span><span class="s9">'storm-name'</span><span class="s1">).innerText = sys.name;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById(</span><span class="s9">'storm-date'</span><span class="s1">).innerText = </span><span class="s9">`STAMP: </span><span class="s1">${sys.date}</span><span class="s9">`</span><span class="s1">;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById(</span><span class="s9">'storm-wind'</span><span class="s1">).innerText = sys.wind;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById(</span><span class="s9">'storm-pressure'</span><span class="s1">).innerText = sys.pressure;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById(</span><span class="s9">'storm-dist'</span><span class="s1">).innerText = dist;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById(</span><span class="s9">'storm-impact'</span><span class="s1">).innerText = sys.impact;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById(</span><span class="s9">'last-updated-stamp'</span><span class="s1">).innerText = </span><span class="s9">`DATA: </span><span class="s1">${sys.date.split(</span><span class="s9">' '</span><span class="s1">)[</span><span class="s15">1</span><span class="s1">]}</span><span class="s9">`</span><span class="s1">;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">if</span><span class="s1">(showSpaghetti) drawSpaghetti();<span class="Apple-converted-space"> </span></span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> populateFeed() {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> container = document.getElementById(</span><span class="s9">'system-feed'</span><span class="s1">);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>container.innerHTML = </span><span class="s9">''</span><span class="s1">;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>activeSystems.forEach(sys =&gt; {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s7">const</span><span class="s1"> dist = calculateDistance(sys.lat, sys.lng, </span><span class="s14">COLOMBO_REF</span><span class="s1">[</span><span class="s15">0</span><span class="s1">], </span><span class="s14">COLOMBO_REF</span><span class="s1">[</span><span class="s15">1</span><span class="s1">]);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s7">const</span><span class="s1"> div = document.createElement(</span><span class="s9">'div'</span><span class="s1">);</span></p>
-<p class="p6"><span class="s4"><span class="Apple-converted-space">                </span>div.className = </span><span class="s1">"bg-black/60 p-4 rounded border border-zinc-800 cursor-pointer hover:border-yellow-500 transition-all"</span><span class="s4">;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>div.innerHTML = </span><span class="s9">`</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex justify-between items-center mb-1"&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;span class="text-white font-black text-xs italic tracking-tighter"&gt;</span><span class="s4">${sys.id}</span><span class="s1">&lt;/span&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;span class="text-[8px] font-bold px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-500 uppercase"&gt;</span><span class="s4">${sys.status}</span><span class="s1">&lt;/span&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex justify-between text-[10px] mt-2 font-mono"&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;span class="text-zinc-500"&gt;DIST: &lt;b class="text-white"&gt;</span><span class="s4">${dist}</span><span class="s1">KM&lt;/b&gt;&lt;/span&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;span class="text-zinc-500"&gt;PRESS: &lt;b class="text-cyan-400"&gt;</span><span class="s4">${sys.pressure}</span><span class="s1">HPA&lt;/b&gt;&lt;/span&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p6"><span class="s1"><span class="Apple-converted-space">                </span>`</span><span class="s4">;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>div.onclick = () =&gt; { updateDisplay(sys); map.flyTo([sys.lat, sys.lng], </span><span class="s15">6</span><span class="s1">); };</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span>container.appendChild(div);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> updateTimers() {</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> now = </span><span class="s7">new</span><span class="s1"> </span><span class="s14">Date</span><span class="s1">();</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById(</span><span class="s9">'utc-clock'</span><span class="s1">).innerText = now.toLocaleTimeString(</span><span class="s9">'en-GB'</span><span class="s1">, { timeZone: </span><span class="s9">'UTC'</span><span class="s1"> }) + </span><span class="s9">" UTC"</span><span class="s1">;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> currentHour = now.getUTCHours();</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> updateHours = [</span><span class="s15">0</span><span class="s1">, </span><span class="s15">6</span><span class="s1">, </span><span class="s15">12</span><span class="s1">, </span><span class="s15">18</span><span class="s1">, </span><span class="s15">24</span><span class="s1">];</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> nextUpdateHour = updateHours.find(h =&gt; h &gt; currentHour);</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> nextUpdate = </span><span class="s7">new</span><span class="s1"> </span><span class="s14">Date</span><span class="s1">(now);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>nextUpdate.setUTCHours(nextUpdateHour, </span><span class="s15">0</span><span class="s1">, </span><span class="s15">0</span><span class="s1">, </span><span class="s15">0</span><span class="s1">);</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> diff = nextUpdate - now;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> h = </span><span class="s14">Math</span><span class="s1">.floor(diff / </span><span class="s15">3600000</span><span class="s1">);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> m = </span><span class="s14">Math</span><span class="s1">.floor((diff % </span><span class="s15">3600000</span><span class="s1">) / </span><span class="s15">60000</span><span class="s1">);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> s = </span><span class="s14">Math</span><span class="s1">.floor((diff % </span><span class="s15">60000</span><span class="s1">) / </span><span class="s15">1000</span><span class="s1">);</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById(</span><span class="s9">'next-update-timer'</span><span class="s1">).innerText =<span class="Apple-converted-space"> </span></span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s9">`</span><span class="s1">${</span><span class="s14">String</span><span class="s1">(h).padStart(</span><span class="s15">2</span><span class="s1">, </span><span class="s9">'0'</span><span class="s1">)}</span><span class="s9">:</span><span class="s1">${</span><span class="s14">String</span><span class="s1">(m).padStart(</span><span class="s15">2</span><span class="s1">, </span><span class="s9">'0'</span><span class="s1">)}</span><span class="s9">:</span><span class="s1">${</span><span class="s14">String</span><span class="s1">(s).padStart(</span><span class="s15">2</span><span class="s1">, </span><span class="s9">'0'</span><span class="s1">)}</span><span class="s9">`</span><span class="s1">;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p7"><span class="s11"></span><br></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>setInterval(updateTimers, </span><span class="s15">1000</span><span class="s1">);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>populateFeed();</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span>updateDisplay(activeSystems[</span><span class="s15">0</span><span class="s1">]);</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s1">script</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s3">&lt;/</span><span class="s1">body</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s3">&lt;/</span><span class="s1">html</span><span class="s3">&gt;</span></p>
+<body class="text-zinc-100 antialiased p-2 md:p-6">
+
+    <!-- Header -->
+    <header class="max-w-[1600px] mx-auto mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-zinc-900/50 p-4 md:p-6 rounded-xl border border-zinc-800 backdrop-blur-md">
+        <div>
+            <div class="flex items-center gap-3">
+                <div class="bg-red-600 text-white px-2 py-0.5 rounded font-black text-[10px] uppercase animate-pulse tracking-tighter text-center">Live<br>Sector</div>
+                <h1 class="text-xl md:text-2xl font-black tracking-tight text-white italic leading-none">SL-MET <span class="text-yellow-500">MONITOR</span></h1>
+            </div>
+            <p class="text-zinc-500 text-[9px] md:text-[10px] uppercase tracking-[0.2em] md:tracking-[0.3em] mt-2 font-bold">ABIO • Jan 06, 2026 Situation</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-4 md:gap-6 w-full md:w-auto">
+            <div class="bg-black/40 px-3 py-2 md:px-4 md:py-2 rounded-lg border border-zinc-800 flex-1 md:flex-none">
+                <span class="text-[8px] md:text-[9px] text-zinc-500 block uppercase font-bold tracking-widest mb-1">Next Data Update</span>
+                <span id="next-update-timer" class="text-base md:text-lg font-mono text-yellow-500 font-bold tracking-tighter">00:00:00</span>
+            </div>
+            <div class="text-right hidden sm:block">
+                <span class="text-[9px] md:text-[10px] text-zinc-500 block uppercase font-bold tracking-widest">Global Clock (UTC)</span>
+                <span id="utc-clock" class="text-xs md:text-sm font-mono text-white italic font-bold">00:00:00</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Stats (Top on Mobile) -->
+        <div class="lg:col-span-4 space-y-6 order-2 lg:order-1">
+            <div class="bg-zinc-900 p-5 md:p-6 rounded-xl border border-zinc-800 shadow-xl relative overflow-hidden">
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="text-[10px] text-yellow-500 font-bold uppercase tracking-[0.2em]">Primary Incident</h2>
+                    <span id="last-updated-stamp" class="text-[9px] font-mono text-zinc-500 bg-black px-2 py-1 rounded">STAMP: JAN 06 12:00Z</span>
+                </div>
+                
+                <h3 id="storm-name" class="text-3xl md:text-4xl font-black text-white uppercase italic mb-1">---</h3>
+                <div id="storm-date" class="text-[10px] text-zinc-500 font-bold mb-6 border-b border-zinc-800 pb-2 italic">Observation: ----</div>
+
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div class="bg-black p-3 md:p-4 rounded-lg border border-zinc-800">
+                        <span class="text-[9px] text-zinc-500 uppercase block font-bold mb-1">Max Winds</span>
+                        <span id="storm-wind" class="text-xl md:text-2xl font-black text-emerald-400">--</span>
+                        <span class="text-[10px] text-zinc-600 font-bold ml-1 italic">KTS</span>
+                    </div>
+                    <div class="bg-black p-3 md:p-4 rounded-lg border border-zinc-800">
+                        <span class="text-[9px] text-zinc-500 uppercase block font-bold mb-1">Central Press</span>
+                        <span id="storm-pressure" class="text-xl md:text-2xl font-black text-cyan-400">----</span>
+                        <span class="text-[10px] text-zinc-600 font-bold ml-1 italic">HPA</span>
+                    </div>
+                    <div class="col-span-2 bg-zinc-950 p-3 md:p-4 rounded-lg border border-zinc-800">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[9px] text-zinc-500 uppercase font-bold">Dist. to Colombo</span>
+                            <span class="text-[8px] text-red-500 font-black animate-pulse">! CRITICAL ALERT</span>
+                        </div>
+                        <span id="storm-dist" class="text-2xl md:text-3xl font-black text-white">----</span>
+                        <span class="text-[10px] text-zinc-500 font-bold uppercase ml-2 italic underline underline-offset-4">Kilometers</span>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-zinc-800/30 rounded border border-zinc-700">
+                    <h4 class="text-[10px] text-yellow-500 font-bold uppercase mb-2">Technical Impact Analysis</h4>
+                    <p id="storm-impact" class="text-xs text-zinc-300 leading-relaxed italic">Monitoring regional circulation. System tracking west-northwest.</p>
+                </div>
+            </div>
+
+            <!-- List Feed -->
+            <div class="bg-zinc-900/50 p-6 rounded-xl border border-zinc-800 hidden lg:block">
+                <h2 class="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.3em] mb-4">Active Incident List</h2>
+                <div id="system-feed" class="space-y-3 max-h-[250px] overflow-y-auto pr-2 custom-scrollbar"></div>
+            </div>
+        </div>
+
+        <!-- Map & Sinhala Advisory (Main Content) -->
+        <div class="lg:col-span-8 space-y-4 order-1 lg:order-2">
+            <div class="relative">
+                <div id="map"></div>
+                <div class="absolute top-4 right-4 z-[1000] flex flex-wrap justify-end gap-2 max-w-[200px] md:max-w-none">
+                    <button onclick="toggleSpaghetti()" id="spaghetti-btn" class="bg-yellow-500/10 hover:bg-yellow-500 text-yellow-500 hover:text-black px-3 py-2 rounded border border-yellow-500/30 text-[9px] md:text-[10px] font-black transition-all tracking-widest uppercase shadow-lg backdrop-blur-md">Possible Paths</button>
+                    <button onclick="changeMap('topo')" class="bg-black/90 hover:bg-zinc-700 text-white px-3 py-2 rounded border border-zinc-700 text-[9px] md:text-[10px] font-black transition-all tracking-widest shadow-lg">SATELLITE</button>
+                    <button onclick="changeMap('standard')" class="bg-black/90 hover:bg-zinc-700 text-white px-3 py-2 rounded border border-zinc-700 text-[9px] md:text-[10px] font-black transition-all tracking-widest shadow-lg">TERRAIN</button>
+                </div>
+                <!-- Model Legend Overlay -->
+                <div id="model-legend" class="hidden absolute bottom-4 left-4 z-[1000] bg-black/80 p-3 rounded-lg border border-zinc-800 backdrop-blur-sm mx-2">
+                    <p class="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Mathematical Models</p>
+                    <p class="text-[7px] text-zinc-400 mb-2 uppercase">Ensemble Forecast Tracks</p>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                        <div class="flex items-center gap-2"><span class="w-3 h-0.5 bg-blue-500"></span><span class="text-[9px] font-bold uppercase">GFS</span></div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-0.5 bg-green-500"></span><span class="text-[9px] font-bold uppercase">ECMWF</span></div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-0.5 bg-red-500"></span><span class="text-[9px] font-bold uppercase">HWRF</span></div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-0.5 bg-yellow-500"></span><span class="text-[9px] font-bold uppercase">UKMET</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Incident List (Only Visible on Small Screens) -->
+            <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800 lg:hidden">
+                <h2 class="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.3em] mb-4">Active Incident List</h2>
+                <div id="system-feed-mobile" class="flex gap-4 overflow-x-auto pb-2 custom-scrollbar"></div>
+            </div>
+
+            <!-- Sinhala Advisory Section -->
+            <div class="bg-zinc-900/80 p-5 md:p-6 rounded-xl border border-zinc-800 shadow-2xl backdrop-blur-md">
+                <div class="flex items-center gap-4 mb-4 border-b border-zinc-800 pb-3">
+                    <div class="bg-yellow-500 text-black px-2 md:px-3 py-1 rounded font-black text-[10px] md:text-xs uppercase italic">Alert / අනතුරු ඇඟවීම</div>
+                    <h2 class="sinhala text-base md:text-lg font-bold text-white tracking-tight leading-none">විශේෂ කාලගුණ නිවේදනය</h2>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="sinhala">
+                        <p class="text-[10px] text-zinc-500 uppercase font-bold mb-2 tracking-widest">Fishermen Advisory / ධීවර ප්‍රජාවට උපදෙස්</p>
+                        <p class="text-xs md:text-sm text-zinc-300 leading-relaxed">
+                            දිවයිනට ගිනිකොණ දෙසින් පවතින අඩු පීඩන කලාපය (Invest 90B) හේතුවෙන් දිවයින වටා වන මුහුදු ප්‍රදේශවල සුළඟේ වේගය පැ.කි.මී 50-60 දක්වා ඉහළ යා හැක.
+                        </p>
+                    </div>
+                    <div class="sinhala border-t md:border-t-0 md:border-l border-zinc-800 pt-4 md:pt-0 md:pl-6">
+                        <p class="text-[10px] text-zinc-500 uppercase font-bold mb-2 tracking-widest">Public Safety / මහජන ආරක්ෂාව</p>
+                        <p class="text-xs md:text-sm text-zinc-300 leading-relaxed">
+                            විශේෂයෙන් උතුරු, නැගෙනහිර සහ දකුණු පළාත්වල තද වැසි සහ තාවකාලික තද සුළං ඇතිවිය හැක. අකුණු අනතුරු අවම කර ගැනීමට පියවර ගන්න.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        const COLOMBO_REF = [6.9271, 79.8612];
+        let showSpaghetti = false;
+        let spaghettiLayers = [];
+        
+        const activeSystems = [
+            {
+                id: "INVEST 90B",
+                name: "LOW PRESSURE AREA",
+                lat: 5.2,
+                lng: 88.1,
+                wind: 25,
+                pressure: 1007,
+                date: "2026-01-06 12:00 UTC",
+                status: "Developing Invest",
+                color: "#eab308",
+                impact: "Broad low-level circulation. Tracking West-Northwest toward SL. Mathematical ensemble models suggest gradual consolidation.",
+                alert: "WATCH",
+                spaghetti: [
+                    { model: 'GFS', color: '#3b82f6', path: [[5.2, 88.1], [6.0, 86.0], [7.2, 83.5], [8.5, 81.2], [9.8, 80.0]] },
+                    { model: 'GFS', color: '#3b82f6', path: [[5.2, 88.1], [5.8, 85.5], [6.5, 82.0], [7.0, 79.5]] },
+                    { model: 'ECMWF', color: '#22c55e', path: [[5.2, 88.1], [5.5, 85.0], [6.2, 81.5], [6.8, 78.5]] },
+                    { model: 'ECMWF', color: '#22c55e', path: [[5.2, 88.1], [6.5, 87.0], [8.0, 86.5], [10.5, 86.0]] }, 
+                    { model: 'HWRF', color: '#ef4444', path: [[5.2, 88.1], [5.9, 84.0], [7.5, 81.8]] },
+                    { model: 'UKMET', color: '#eab308', path: [[5.2, 88.1], [5.3, 85.0], [5.5, 82.0], [5.8, 80.0]] }
+                ]
+            },
+            {
+                id: "CYC-JENNA",
+                name: "CYC JENNA (S.I.O)",
+                lat: -16.3,
+                lng: 94.1,
+                wind: 90,
+                pressure: 968,
+                date: "2026-01-06 12:00 UTC",
+                status: "Severe Cyclone",
+                color: "#dc2626",
+                impact: "Intense system south of Cocos Islands. Tracking SW at 15km/h. Rapid weakening expected in 48h.",
+                alert: "MONITOR",
+                spaghetti: [
+                    { model: 'GEFS', color: '#3b82f6', path: [[-16.3, 94.1], [-18.5, 92.0], [-21.0, 90.5]] },
+                    { model: 'GEFS', color: '#3b82f6', path: [[-16.3, 94.1], [-17.5, 93.0], [-19.0, 91.5]] }
+                ]
+            }
+        ];
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+        }
+
+        const map = L.map('map', { zoomControl: false }).setView([7.8731, 80.7718], 5);
+
+        const tiles = {
+            topo: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri Satellite' }),
+            standard: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { attribution: 'OpenTopo' })
+        };
+        tiles.topo.addTo(map);
+
+        function changeMap(key) {
+            Object.values(tiles).forEach(t => map.removeLayer(t));
+            tiles[key].addTo(map);
+        }
+
+        L.circleMarker(COLOMBO_REF, { radius: 6, fillColor: "#eab308", color: "#fff", weight: 2, fillOpacity: 1 }).addTo(map).bindTooltip("<b class='font-black tracking-tighter'>COLOMBO</b>", { permanent: true, direction: 'top' });
+
+        activeSystems.forEach(sys => {
+            const marker = L.circleMarker([sys.lat, sys.lng], {
+                radius: 12,
+                fillColor: sys.color,
+                color: "#fff",
+                weight: 1,
+                fillOpacity: 0.9,
+                className: sys.wind > 30 ? 'pulse-alert' : ''
+            }).addTo(map);
+
+            marker.bindTooltip(`<div class='bg-black p-1 text-[9px] font-black' style='color:${sys.color}'>${sys.id}</div>`, { permanent: true, direction: 'bottom' });
+            marker.on('click', () => { updateDisplay(sys); map.flyTo([sys.lat, sys.lng], 6); });
+        });
+
+        function toggleSpaghetti() {
+            showSpaghetti = !showSpaghetti;
+            const btn = document.getElementById('spaghetti-btn');
+            const legend = document.getElementById('model-legend');
+            
+            if (showSpaghetti) {
+                btn.classList.add('bg-yellow-500', 'text-black');
+                legend.classList.remove('hidden');
+                drawSpaghetti();
+            } else {
+                btn.classList.remove('bg-yellow-500', 'text-black');
+                legend.classList.add('hidden');
+                clearSpaghetti();
+            }
+        }
+
+        function drawSpaghetti() {
+            clearSpaghetti();
+            activeSystems.forEach(sys => {
+                if (sys.spaghetti) {
+                    sys.spaghetti.forEach(member => {
+                        const line = L.polyline(member.path, {
+                            color: member.color,
+                            weight: 1.5,
+                            opacity: 0.6,
+                            dashArray: '5, 5'
+                        }).addTo(map);
+                        spaghettiLayers.push(line);
+                    });
+                }
+            });
+        }
+
+        function clearSpaghetti() {
+            spaghettiLayers.forEach(l => map.removeLayer(l));
+            spaghettiLayers = [];
+        }
+
+        function updateDisplay(sys) {
+            const dist = calculateDistance(sys.lat, sys.lng, COLOMBO_REF[0], COLOMBO_REF[1]);
+            document.getElementById('storm-name').innerText = sys.name;
+            document.getElementById('storm-date').innerText = `STAMP: ${sys.date}`;
+            document.getElementById('storm-wind').innerText = sys.wind;
+            document.getElementById('storm-pressure').innerText = sys.pressure;
+            document.getElementById('storm-dist').innerText = dist;
+            document.getElementById('storm-impact').innerText = sys.impact;
+            document.getElementById('last-updated-stamp').innerText = `DATA: ${sys.date.split(' ')[1]}`;
+            if(showSpaghetti) drawSpaghetti(); 
+        }
+
+        function populateFeed() {
+            const desktopContainer = document.getElementById('system-feed');
+            const mobileContainer = document.getElementById('system-feed-mobile');
+            
+            desktopContainer.innerHTML = '';
+            mobileContainer.innerHTML = '';
+
+            activeSystems.forEach(sys => {
+                const dist = calculateDistance(sys.lat, sys.lng, COLOMBO_REF[0], COLOMBO_REF[1]);
+                const cardHTML = `
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-white font-black text-[10px] md:text-xs italic tracking-tighter">${sys.id}</span>
+                        <span class="text-[7px] md:text-[8px] font-bold px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-500 uppercase">${sys.status}</span>
+                    </div>
+                    <div class="flex justify-between text-[9px] md:text-[10px] mt-2 font-mono">
+                        <span class="text-zinc-500 whitespace-nowrap">DIST: <b class="text-white">${dist}KM</b></span>
+                        <span class="text-zinc-500 whitespace-nowrap">PRESS: <b class="text-cyan-400">${sys.pressure}H</b></span>
+                    </div>
+                `;
+
+                // Desktop Item
+                const dDiv = document.createElement('div');
+                dDiv.className = "bg-black/60 p-4 rounded border border-zinc-800 cursor-pointer hover:border-yellow-500 transition-all";
+                dDiv.innerHTML = cardHTML;
+                dDiv.onclick = () => { updateDisplay(sys); map.flyTo([sys.lat, sys.lng], 6); };
+                desktopContainer.appendChild(dDiv);
+
+                // Mobile Item
+                const mDiv = document.createElement('div');
+                mDiv.className = "min-w-[180px] bg-black/60 p-3 rounded border border-zinc-800 cursor-pointer";
+                mDiv.innerHTML = cardHTML;
+                mDiv.onclick = () => { updateDisplay(sys); map.flyTo([sys.lat, sys.lng], 6); window.scrollTo({top: 0, behavior: 'smooth'}); };
+                mobileContainer.appendChild(mDiv);
+            });
+        }
+
+        function updateTimers() {
+            const now = new Date();
+            document.getElementById('utc-clock').innerText = now.toLocaleTimeString('en-GB', { timeZone: 'UTC' }) + " UTC";
+            
+            const currentHour = now.getUTCHours();
+            const updateHours = [0, 6, 12, 18, 24];
+            const nextUpdateHour = updateHours.find(h => h > currentHour) || 24;
+            
+            const nextUpdate = new Date(now);
+            nextUpdate.setUTCHours(nextUpdateHour, 0, 0, 0);
+            
+            const diff = nextUpdate - now;
+            const h = Math.floor(diff / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            
+            document.getElementById('next-update-timer').innerText = 
+                `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+        setInterval(updateTimers, 1000);
+        populateFeed();
+        updateDisplay(activeSystems[0]);
+    </script>
 </body>
 </html>
