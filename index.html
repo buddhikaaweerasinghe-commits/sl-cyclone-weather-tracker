@@ -3,274 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sri Lanka & IND Basin | AutoPilot Cyclone Monitoring System</title>
+    <title>AutoPilot | SL & IND Basin Cyclone Monitoring</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Leaflet Map Assets -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+Sinhala:wght@400;700&display=swap');
-        body { background-color: #08080a; font-family: 'Inter', 'Noto Sans Sinhala', sans-serif; color: white; overflow: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Noto+Sans+Sinhala:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap');
         
-        #map { height: 100%; width: 100%; z-index: 1; background: #e0e0e0 !important; }
+        :root {
+            --panel-bg: rgba(10, 10, 14, 0.85);
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+            --accent-emerald: #10b981;
+        }
+
+        body { 
+            background-color: #050507; 
+            font-family: 'Inter', 'Noto Sans Sinhala', sans-serif; 
+            color: white; 
+            overflow: hidden; 
+        }
         
-        /* Premium Marker Styling */
-        .storm-marker { display: flex; align-items: center; justify-content: center; position: relative; }
+        #map { height: 100%; width: 100%; z-index: 1; background: #111 !important; }
+        
+        .glass-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        /* Marker Styles */
+        .storm-marker { display: flex; align-items: center; justify-content: center; }
         .pulse-ring {
             position: absolute;
-            width: 44px;
-            height: 44px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            animation: ripple 2s infinite ease-out;
-            border: 2px solid;
+            animation: ripple 2.5s infinite cubic-bezier(0.23, 1, 0.32, 1);
+            border: 2px solid currentColor;
             pointer-events: none;
         }
         .storm-core {
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
             border: 2px solid white;
             z-index: 2;
-            box-shadow: 0 0 15px currentColor;
+            box-shadow: 0 0 20px currentColor;
         }
         
         @keyframes ripple {
-            0% { transform: scale(0.4); opacity: 1; }
-            100% { transform: scale(2.8); opacity: 0; }
+            0% { transform: scale(0.3); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
         }
 
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
         
-        .leaflet-container { border: none !important; }
-        .custom-popup .leaflet-popup-content-wrapper { background: #18181b; color: white; border: 1px solid #3f3f46; font-size: 11px; border-radius: 12px; }
-        .custom-popup .leaflet-popup-tip { background: #18181b; }
+        .leaflet-container { background: #0f172a !important; }
         
-        .glass-panel {
-            background: rgba(10, 10, 12, 0.9);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .custom-popup .leaflet-popup-content-wrapper { 
+            background: #18181b; 
+            color: white; 
+            border: 1px solid #3f3f46; 
+            font-size: 11px; 
+            border-radius: 12px;
+            padding: 4px;
         }
 
-        .status-badge {
-            font-size: 9px;
-            font-weight: 900;
-            padding: 2px 8px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+        .blink-warning { animation: blinker 1.5s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0.3; } }
+
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgba(59, 130, 246, 0.5), transparent);
+            position: absolute;
+            top: 0;
+            z-index: 1000;
+            animation: scan 4s linear infinite;
+        }
+        @keyframes scan { from { top: 0%; } to { top: 100%; } }
+
+        /* HUD Slide in Animation */
+        .hud-active {
+            opacity: 1 !important;
+            transform: translateX(0) !important;
+            pointer-events: auto !important;
         }
 
-        /* Blinking Warning Animation */
-        .blink-warning {
-            animation: blinker 1.5s linear infinite;
-        }
-
-        .blink-yellow {
-            animation: blink-yellow-anim 1s linear infinite;
-        }
-
-        @keyframes blinker {
-            50% { opacity: 0; }
-        }
-
-        @keyframes blink-yellow-anim {
-            50% { border-color: rgba(234, 179, 8, 0.2); }
-        }
-
-        @media (max-width: 768px) {
-            .mobile-hide { display: none !important; }
-            .sidebar-active aside { display: flex !important; position: absolute; left: 0; top: 0; bottom: 0; width: 85%; }
-            #hud-overlay { width: calc(100% - 2rem); right: 1rem; left: 1rem; }
+        .sidebar-transition {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
     </style>
 </head>
-<body class="h-screen flex flex-col" id="app-body">
+<body class="h-screen flex flex-col">
 
-    <!-- Global Command Header -->
-    <header class="h-16 glass-panel border-b border-white/5 px-4 md:px-6 flex items-center justify-between z-50">
-        <div class="flex items-center gap-3 md:gap-4">
-            <button onclick="toggleSidebar()" class="lg:hidden p-2 bg-zinc-800 rounded-lg">
+    <div class="scanline pointer-events-none"></div>
+
+    <!-- Main Navigation Bar -->
+    <header class="h-16 glass-panel border-b border-white/5 px-4 flex items-center justify-between z-[1002]">
+        <div class="flex items-center gap-4">
+            <button onclick="toggleSidebar()" class="lg:hidden p-2 hover:bg-white/10 rounded-lg transition-colors">
                 <i data-lucide="menu" class="w-5 h-5"></i>
             </button>
-            <div class="bg-red-500/10 p-2 rounded-xl border border-red-500/20 shadow-[0_0_15px_rgba(59,130,246,0.2)] mobile-hide">
-                <i data-lucide="satellite" class="text-blue-400 w-5 h-5 animate-pulse"></i>
-            </div>
-            <div>
-                <h1 class="text-lg md:text-xl font-black italic uppercase tracking-tighter">
-                    SL & IND BASIN <span class="text-blue-400 underline decoration-2 underline-offset-4">CYCLONE MONITORING</span>
-                </h1>
-                <div class="flex items-center gap-2">
-                    <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
-                    <p class="text-[9px] text-zinc-400 font-mono uppercase tracking-widest">Regional Scan Active</p>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-600/20 rounded-xl flex items-center justify-center border border-blue-500/30">
+                    <i data-lucide="radar" class="text-blue-400 w-6 h-6 animate-pulse"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-black tracking-tighter uppercase italic leading-none">
+                        AutoPilot <span class="text-blue-500">Cyclone</span>
+                    </h1>
+                    <p class="text-[9px] font-mono text-zinc-500 uppercase tracking-[0.2em] mt-1">Regional Surveillance v5.0</p>
                 </div>
             </div>
         </div>
         
-        <div class="flex items-center gap-4 md:gap-8">
-            <div class="text-right hidden md:block border-l border-white/10 pl-6">
-                <p class="text-[10px] text-zinc-400 uppercase font-bold tracking-widest mb-0.5">System Integrity</p>
-                <div class="flex flex-col items-end">
-                    <p id="system-status" class="text-xs text-emerald-400 font-mono font-bold uppercase tracking-tighter italic">Operational</p>
-                    <p id="last-updated-time" class="text-[8px] text-zinc-500 font-mono font-bold uppercase tracking-tighter">Updated: --:--:--</p>
-                </div>
+        <div class="flex items-center gap-4 md:gap-6">
+            <div class="hidden sm:flex flex-col items-end border-r border-white/10 pr-6">
+                <span class="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">Network Status</span>
+                <span id="system-status" class="text-[11px] text-emerald-400 font-mono font-bold uppercase italic">Satellite Link: Optimal</span>
             </div>
-            <button onclick="manualSync()" class="p-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-all border border-white/10 active:scale-90">
-                <i data-lucide="refresh-cw" id="sync-icon" class="w-4 h-4 text-white"></i>
+            <button onclick="manualSync()" class="group flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-2 rounded-xl transition-all active:scale-95">
+                <i data-lucide="refresh-cw" id="sync-icon" class="w-4 h-4 text-zinc-400 group-hover:text-white"></i>
+                <span class="text-[10px] font-black uppercase tracking-widest hidden md:block">Recalibrate</span>
             </button>
         </div>
     </header>
 
     <div class="flex-1 flex overflow-hidden relative">
-        <!-- Sidebar: Global Matrix -->
-        <aside id="sidebar" class="w-80 glass-panel border-r border-white/10 flex flex-col z-[1001] hidden lg:flex">
-            <div class="p-4 border-b border-white/10 flex justify-between items-center">
+        <!-- Intelligence Sidebar -->
+        <aside id="sidebar" class="sidebar-transition absolute lg:relative lg:translate-x-0 -translate-x-full w-80 glass-panel border-r border-white/10 flex flex-col z-[1001] h-full">
+            <div class="p-5 border-b border-white/10 flex justify-between items-center">
                 <div class="flex items-center gap-2">
-                    <i data-lucide="activity" class="w-4 h-4 text-zinc-400"></i>
-                    <h2 class="text-[10px] font-black uppercase text-zinc-300 tracking-widest">Active Situations</h2>
+                    <i data-lucide="list" class="w-4 h-4 text-blue-400"></i>
+                    <h2 class="text-xs font-black uppercase text-zinc-300 tracking-widest">Active Systems</h2>
                 </div>
-                <div class="flex items-center gap-2">
-                    <span id="active-count" class="bg-blue-500/20 text-blue-300 text-[10px] px-2 py-0.5 rounded-full font-bold border border-blue-500/30">0</span>
-                    <button onclick="toggleSidebar()" class="lg:hidden text-zinc-400"><i data-lucide="x" class="w-4 h-4"></i></button>
-                </div>
+                <span id="active-count" class="bg-blue-500/10 text-blue-400 text-[10px] px-2.5 py-0.5 rounded-full font-black border border-blue-500/20">0</span>
             </div>
             
-            <div id="storm-list" class="flex-1 overflow-y-auto p-2 space-y-2 custom-scrollbar">
-                <!-- Storm Cards Injected Here -->
+            <div id="storm-list" class="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
+                <!-- Storm Cards -->
             </div>
 
-            <!-- Console Log -->
-            <div class="h-auto md:h-64 border-t border-white/10 p-4 bg-black/60">
-                <!-- Blinking Advisory Section -->
-                <div class="mb-4 p-3 bg-red-900/20 border border-red-500/30 rounded-lg">
-                    <p class="text-[10px] font-black text-red-400 uppercase tracking-widest blink-warning mb-1 flex items-center gap-2">
-                        <i data-lucide="alert-triangle" class="w-3 h-3"></i> Advisory Notice
+            <!-- Telemetry Feed -->
+            <div class="h-64 border-t border-white/10 p-5 bg-black/40">
+                <div class="mb-4 p-3 bg-red-950/20 border border-red-500/20 rounded-xl">
+                    <p class="text-[9px] font-black text-red-400 uppercase tracking-widest flex items-center gap-2 mb-1.5">
+                        <i data-lucide="shield-alert" class="w-3 h-3"></i> Intelligence Advisory
                     </p>
-                    <p class="text-[9px] text-zinc-300 font-bold leading-tight uppercase tracking-tight mb-2">
-                        FOLLOW LOCAL WEATHER ADVISORY. THIS SYSTEM IS JUST A GUIDE FOR REFERENCE ONLY.
-                    </p>
-                    <p class="text-[8px] text-zinc-400 italic leading-tight uppercase">
-                        මෙහි දැක්වෙන ගමන් මාර්ග AI (කෘතිම බුද්ධිය) සහ Spaghetti මාදිලි මගින් නිර්මාණය කර ඇත. නිල කාලගුණ වාර්තා සඳහා රජයේ උපදෙස් පිළිපදින්න.
+                    <p class="text-[9px] text-zinc-400 font-medium leading-relaxed italic">
+                        Models are indicative. Cross-reference with Department of Meteorology Sri Lanka.
                     </p>
                 </div>
 
-                <h2 class="text-[10px] font-black uppercase text-zinc-400 mb-3 flex items-center gap-2">
-                    <i data-lucide="terminal" class="w-3 h-3 text-zinc-500"></i> Telemetry Stream
-                </h2>
-                <div id="log-container" class="text-[9px] font-mono space-y-1.5 h-24 md:h-28 overflow-y-auto custom-scrollbar text-zinc-400">
-                    <div>[00:00:00] Initializing regional telemetry links...</div>
-                    <div>[00:00:01] Parsing JTWC binary datasets...</div>
+                <h3 class="text-[9px] font-black uppercase text-zinc-500 mb-3 flex items-center gap-2">
+                    <i data-lucide="hash" class="w-3 h-3"></i> Live Telemetry Stream
+                </h3>
+                <div id="log-container" class="text-[9px] font-mono space-y-2 h-24 overflow-y-auto custom-scrollbar text-zinc-500">
+                    <!-- Logs -->
                 </div>
             </div>
         </aside>
 
-        <!-- Main Map Area -->
+        <!-- Geo-Spatial Engine -->
         <main class="flex-1 relative">
             <div id="map"></div>
 
-            <!-- Sinhala Emergency Advisory Banner -->
-            <div id="emergency-banner" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-[1000] w-[90%] md:w-auto hidden transition-all duration-300">
-                <div id="banner-container" class="glass-panel px-6 py-4 rounded-2xl flex items-center gap-4 shadow-2xl border-2">
-                    <div id="banner-icon-bg" class="p-2 rounded-full animate-pulse">
-                        <i data-lucide="alert-octagon" id="banner-icon" class="w-6 h-6 text-white"></i>
+            <!-- Emergency Warning UI -->
+            <div id="emergency-banner" class="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000] w-[95%] max-w-2xl hidden opacity-0 transition-all duration-500">
+                <div id="banner-container" class="glass-panel p-5 rounded-3xl flex items-center gap-5 border-2">
+                    <div id="banner-icon-bg" class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0">
+                        <i data-lucide="alert-triangle" id="banner-icon" class="w-6 h-6 text-white"></i>
                     </div>
                     <div>
-                        <p id="banner-text-primary" class="text-white text-sm md:text-base font-bold leading-tight">ශ්‍රී ලංකාවට බලපෑම් ඇතිවිය හැකි පීඩන අවපාතයක් නිරීක්ෂණය වේ.</p>
-                        <p id="banner-text-secondary" class="text-zinc-400 text-[10px] uppercase tracking-widest font-black mt-1">කාලගුණ විද්‍යා දෙපාර්තමේන්තුවේ උපදෙස් සහ ප්‍රාදේශීය පුවත් අනුගමනය කරන්න.</p>
-                        <p class="text-[8px] text-zinc-500 mt-1 uppercase italic font-bold">Paths generated by AI/Spaghetti models - For reference only</p>
+                        <p id="banner-text-sinhala" class="text-white text-base font-bold leading-tight">අවදානය: ශ්‍රී ලංකාවට බලපෑම් ඇතිවිය හැකි පීඩන අවපාතයක්.</p>
+                        <p id="banner-text-en" class="text-zinc-400 text-[10px] uppercase font-black tracking-widest mt-1.5">Proximity Alert: Potential Impact within coast</p>
                     </div>
                 </div>
             </div>
-            
-            <!-- Focused Intelligence HUD -->
-            <div id="hud-overlay" class="absolute top-4 right-4 z-[1000] w-full md:w-80 space-y-3 transition-all duration-500 opacity-0 transform translate-x-4 pointer-events-none px-4 md:px-0">
-                <div class="glass-panel p-4 md:p-6 rounded-3xl shadow-2xl pointer-events-auto border-white/20">
-                    <div class="flex justify-between items-center border-b border-white/10 pb-4 mb-4">
-                        <div>
-                            <h2 id="focus-name" class="text-2xl md:text-3xl font-black italic text-white leading-none uppercase tracking-tighter">--</h2>
-                            <p id="focus-basin" class="text-[10px] uppercase tracking-widest text-blue-400 font-bold mt-1.5 italic">--</p>
+
+            <!-- Tactical Intelligence HUD -->
+            <div id="hud-overlay" class="absolute top-6 right-6 z-[1000] w-80 space-y-4 opacity-0 transform translate-x-8 pointer-events-none transition-all duration-500">
+                <div class="glass-panel p-6 rounded-[2.5rem] border-white/10 shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4">
+                        <button onclick="closeHud()" class="p-2 hover:bg-white/10 rounded-full transition-colors">
+                            <i data-lucide="x" class="w-4 h-4 text-zinc-500"></i>
+                        </button>
+                    </div>
+
+                    <div class="mb-6">
+                        <span id="focus-basin" class="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em]">---</span>
+                        <h2 id="focus-name" class="text-3xl font-black italic tracking-tighter uppercase text-white mt-1">--</h2>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+                        <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
+                            <span class="text-[9px] font-bold text-zinc-500 uppercase block mb-1">Max Winds</span>
+                            <div class="flex items-baseline gap-1">
+                                <span id="focus-wind" class="text-2xl font-black italic">--</span>
+                                <span class="text-[10px] font-bold text-zinc-600">KTS</span>
+                            </div>
                         </div>
-                        <div id="focus-icon-container" class="p-2 md:p-3 bg-white/5 rounded-2xl">
-                             <i data-lucide="shield-alert" id="focus-icon" class="w-6 h-6 md:w-8 md:h-8"></i>
+                        <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
+                            <span class="text-[9px] font-bold text-zinc-500 uppercase block mb-1">Min Pressure</span>
+                            <div class="flex items-baseline gap-1">
+                                <span id="focus-pressure" class="text-2xl font-black italic">--</span>
+                                <span class="text-[10px] font-bold text-zinc-600">MB</span>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- PROXIMITY ALERT BOX -->
-                    <div class="bg-blue-500/20 border border-blue-400/30 p-3 rounded-2xl mb-4 flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <i data-lucide="map-pin" class="w-3 h-3 text-blue-300"></i>
-                            <span class="text-[9px] font-black uppercase text-blue-200">Sri Lanka Proximity</span>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-blue-500/10 rounded-xl border border-blue-500/20">
+                            <span class="text-[10px] font-black text-blue-400 uppercase tracking-tighter">SL Proximity</span>
+                            <span id="focus-distance" class="text-xs font-mono font-bold text-white tracking-tighter">-- km</span>
                         </div>
-                        <span id="focus-distance" class="text-xs font-mono font-bold text-white tracking-tighter">--- km</span>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3 md:gap-4 mb-5">
-                        <div class="bg-white/5 p-3 md:p-4 rounded-2xl border border-white/10">
-                            <p class="text-[9px] uppercase font-black text-zinc-400 mb-1">Peak Intensity</p>
-                            <p class="text-xl md:text-2xl font-black text-white italic"><span id="focus-wind">--</span><span class="text-[10px] ml-1 font-bold opacity-50 tracking-widest uppercase">KTS</span></p>
-                        </div>
-                        <div class="bg-white/5 p-3 md:p-4 rounded-2xl border border-white/10">
-                            <p class="text-[9px] uppercase font-black text-zinc-400 mb-1">Barometer</p>
-                            <p class="text-xl md:text-2xl font-black text-white italic"><span id="focus-pressure">--</span><span class="text-[10px] ml-1 font-bold opacity-50 tracking-widest uppercase">MB</span></p>
+                        
+                        <div class="bg-zinc-900/50 p-3 rounded-xl space-y-2">
+                            <div class="flex justify-between text-[10px]">
+                                <span class="text-zinc-500 font-bold uppercase">Coordinates</span>
+                                <span id="focus-coords" class="text-zinc-200 font-mono">--</span>
+                            </div>
+                            <div class="flex justify-between text-[10px]">
+                                <span class="text-zinc-500 font-bold uppercase">Intensity Trend</span>
+                                <span id="focus-trend" class="text-emerald-400 font-black uppercase italic">Steady</span>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="space-y-3 text-[10px] font-bold">
-                        <div class="flex justify-between text-zinc-400 border-b border-white/10 pb-2">
-                            <span class="uppercase tracking-tighter">SATELLITE FIX</span>
-                            <span id="focus-coords" class="text-white font-mono tracking-tighter bg-zinc-800 px-2 py-0.5 rounded">--</span>
-                        </div>
-                        <div class="flex justify-between text-zinc-400 border-b border-white/10 pb-2">
-                            <span class="uppercase tracking-tighter">FORECAST TREND</span>
-                            <span id="focus-trend" class="text-emerald-400 uppercase tracking-tighter italic">Stable</span>
-                        </div>
-                    </div>
-                    
-                    <button onclick="closeHud()" class="w-full mt-4 py-2 bg-zinc-800 text-[10px] font-black uppercase tracking-widest rounded-xl border border-white/5 md:hidden">Close Intelligence</button>
                 </div>
 
-                <!-- Global Sync Footer -->
-                <div class="glass-panel p-3 md:p-4 rounded-2xl flex items-center justify-between">
+                <div class="glass-panel px-5 py-3 rounded-2xl flex items-center justify-between border-white/5">
                     <div class="flex items-center gap-3">
-                        <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]"></div>
-                        <p id="last-sync" class="text-[10px] font-mono text-zinc-300 uppercase tracking-tighter font-bold">
-                            SYNC: --:--:--
-                        </p>
+                        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                        <span id="last-sync" class="text-[9px] font-mono text-zinc-400 font-bold">LATEST SYNC: --:--:--</span>
                     </div>
-                    <span class="text-[9px] text-zinc-500 font-black tracking-widest">v4.5.0-REG</span>
                 </div>
             </div>
         </main>
     </div>
 
     <script>
-        const SRI_LANKA_COORDS = [7.8731, 80.7718];
-        lucide.createIcons();
+        // Constants & Configuration
+        const SRI_LANKA = [7.8731, 80.7718];
+        const MAP_STYLE = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
         
+        // State
         let storms = [
-            { id: '90B', name: 'Invest 90B', lat: 5.5, lon: 87.8, wind: 30, pressure: 1004, basin: 'North Indian', trend: 'Deepening', path: [[5.2, 88.5], [5.4, 88.1], [5.5, 87.8]] },
-            { id: '12S', name: 'TC JENNA', lat: -17.2, lon: 93.5, wind: 105, pressure: 954, basin: 'South Indian', trend: 'Steady', path: [[-15.0, 95.0], [-16.0, 94.2], [-17.2, 93.5]] }
+            { 
+                id: '91B', 
+                name: 'Invest 91B', 
+                lat: 7.2, lon: 85.1, // Updated Location
+                wind: 35, pressure: 1002, 
+                basin: 'Bay of Bengal', trend: 'Deepening', 
+                path: [[5.8, 87.5], [6.0, 87.0], [6.5, 86.2], [7.2, 85.1]] 
+            }
         ];
-        
         let markers = {};
         let polylines = {};
-        let ensembleLines = {};
-        const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([7.8, 81], 5);
+        let ensembles = {};
         
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
+        // Initialize Map
+        const map = L.map('map', { 
+            zoomControl: false, 
+            attributionControl: false,
+            minZoom: 3,
+            maxZoom: 10
+        }).setView([7.8, 85], 5);
 
+        L.tileLayer(MAP_STYLE).addTo(map);
+
+        // Core Functions
         function toggleSidebar() {
-            document.body.classList.toggle('sidebar-active');
-        }
-
-        function closeHud() {
-            const hud = document.getElementById('hud-overlay');
-            hud.style.opacity = "0";
-            hud.style.transform = "translateX(1rem)";
-            hud.style.pointerEvents = "none";
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
         }
 
         function getDistance(lat1, lon1, lat2, lon2) {
@@ -280,212 +290,180 @@
             const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
                       Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                       Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return Math.round(R * c);
+            return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
         }
 
-        function generateEnsembles(storm) {
-            const models = 12; 
-            const ensembleData = [];
-            for(let i=0; i<models; i++) {
-                let memberPath = [[storm.lat, storm.lon]];
-                let curLat = storm.lat;
-                let curLon = storm.lon;
-                for(let p=1; p<=6; p++) {
-                    curLat += (Math.random() * 1.8 - 0.4) * 0.7; 
-                    curLon -= (Math.random() * 2.2) * 0.7;       
-                    memberPath.push([curLat, curLon]);
+        function getStormCategory(wind) {
+            if (wind >= 115) return { label: 'Extremely Severe', color: '#a855f7' }; // Purple
+            if (wind >= 64) return { label: 'Severe Cyclone', color: '#ef4444' }; // Red
+            if (wind >= 34) return { label: 'Depression', color: '#f59e0b' }; // Amber
+            return { label: 'Invest / Low', color: '#3b82f6' }; // Blue
+        }
+
+        function generateEnsemblePaths(storm) {
+            const paths = [];
+            for(let i=0; i<8; i++) {
+                let current = [storm.lat, storm.lon];
+                let path = [current];
+                for(let step=1; step<=10; step++) {
+                    let nextLat = current[0] + (Math.random() * 0.4 - 0.1);
+                    let nextLon = current[1] - (Math.random() * 0.7 + 0.1);
+                    current = [nextLat, nextLon];
+                    path.push(current);
                 }
-                ensembleData.push(memberPath);
+                paths.push(path);
             }
-            return ensembleData;
+            return paths;
         }
 
-        function addLog(msg, type = 'INFO') {
+        function addLog(msg, isAlert = false) {
             const container = document.getElementById('log-container');
-            if(!container) return;
-            const time = new Date().toLocaleTimeString([], { hour12: false });
-            const div = document.createElement('div');
-            const colorClass = type === 'ALERT' ? 'text-yellow-400' : 'text-zinc-400';
-            div.innerHTML = `[${time}] <span class="${colorClass} font-bold">${msg}</span>`;
-            container.prepend(div);
+            const entry = document.createElement('div');
+            const time = new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            entry.className = isAlert ? 'text-blue-400 font-bold' : '';
+            entry.innerHTML = `<span class="opacity-50">[${time}]</span> ${msg}`;
+            container.prepend(entry);
         }
 
-        function getCategoryData(wind) {
-            if (wind >= 115) return { label: 'MAJOR', color: '#9333ea' };
-            if (wind >= 64) return { label: 'CYCLONE', color: '#dc2626' };
-            if (wind >= 34) return { label: 'DEPRESSION', color: '#d97706' };
-            return { label: 'INVEST', color: '#2563eb' };
-        }
-
-        function refreshUI() {
+        function updateUI() {
             const list = document.getElementById('storm-list');
-            if(!list) return;
-            list.innerHTML = "";
+            list.innerHTML = '';
             
+            // Clear existing layers
             Object.values(markers).forEach(m => map.removeLayer(m));
             Object.values(polylines).forEach(p => map.removeLayer(p));
-            Object.values(ensembleLines).forEach(elSet => elSet.forEach(l => map.removeLayer(l)));
+            Object.values(ensembles).forEach(group => group.forEach(l => map.removeLayer(l)));
             
-            markers = {};
-            polylines = {};
-            ensembleLines = {};
-
-            let minDistance = 99999;
+            let closestDist = 99999;
 
             storms.forEach(storm => {
-                const cat = getCategoryData(storm.wind);
-                const distToSL = getDistance(storm.lat, storm.lon, SRI_LANKA_COORDS[0], SRI_LANKA_COORDS[1]);
-                
-                if (distToSL < minDistance && storm.wind >= 30) {
-                    minDistance = distToSL;
-                }
+                const cat = getStormCategory(storm.wind);
+                const dist = getDistance(storm.lat, storm.lon, SRI_LANKA[0], SRI_LANKA[1]);
+                if (dist < closestDist) closestDist = dist;
 
+                // Sidebar Card
                 const card = document.createElement('div');
-                card.className = "p-4 rounded-2xl glass-panel hover:bg-white/10 transition-all cursor-pointer border-l-4 group";
+                card.className = 'glass-panel p-4 rounded-2xl cursor-pointer hover:bg-white/5 border-l-4 transition-all group active:scale-[0.98]';
                 card.style.borderLeftColor = cat.color;
-                card.onclick = () => {
-                    focusStorm(storm);
-                    if(window.innerWidth < 1024) toggleSidebar();
-                };
+                card.onclick = () => focusStorm(storm);
                 card.innerHTML = `
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-bold text-white uppercase italic tracking-tighter group-hover:text-blue-300 transition-colors">${storm.name}</h3>
-                        <span class="status-badge" style="background:${cat.color}30; color:${cat.color}; border: 1px solid ${cat.color}60">${cat.label}</span>
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-black italic text-zinc-200 uppercase tracking-tighter group-hover:text-white">${storm.name}</h3>
+                        <span class="text-[8px] font-black px-2 py-0.5 rounded border" style="color: ${cat.color}; border-color: ${cat.color}40; background: ${cat.color}10">
+                            ${cat.label}
+                        </span>
                     </div>
-                    <div class="grid grid-cols-2 gap-2 text-[10px] font-bold">
-                        <div class="flex items-center gap-1.5 text-zinc-300"><i data-lucide="wind" class="w-3 h-3 text-zinc-400"></i> ${storm.wind} kts</div>
-                        <div class="flex items-center gap-1.5 text-blue-300"><i data-lucide="map-pin" class="w-3 h-3"></i> ${distToSL} km SL</div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="flex items-center gap-1.5 text-[10px] font-bold text-zinc-500">
+                            <i data-lucide="wind" class="w-3 h-3"></i> ${storm.wind} kts
+                        </div>
+                        <div class="flex items-center gap-1.5 text-[10px] font-bold text-blue-400">
+                            <i data-lucide="map-pin" class="w-3 h-3"></i> ${dist} km
+                        </div>
                     </div>
                 `;
                 list.appendChild(card);
 
-                ensembleLines[storm.id] = [];
-                const ensembles = generateEnsembles(storm);
-                ensembles.forEach(path => {
-                    const el = L.polyline(path, { color: cat.color, weight: 1.5, opacity: 0.3, lineCap: 'round' }).addTo(map);
-                    ensembleLines[storm.id].push(el);
-                });
-
+                // Map Marker
                 const icon = L.divIcon({
                     className: 'storm-marker',
-                    html: `<div class="pulse-ring" style="border-color:${cat.color}"></div><div class="storm-core" style="background:${cat.color}; color:${cat.color}"></div>`,
-                    iconSize: [44, 44]
+                    html: `<div class="pulse-ring" style="color: ${cat.color}"></div><div class="storm-core" style="background: ${cat.color}"></div>`,
+                    iconSize: [50, 50]
                 });
-                
-                const m = L.marker([storm.lat, storm.lon], { icon }).addTo(map)
-                    .bindPopup(`<b>${storm.name}</b><br>Dist to SL: ${distToSL} km`, { className: 'custom-popup' });
-                markers[storm.id] = m;
+                markers[storm.id] = L.marker([storm.lat, storm.lon], { icon }).addTo(map).bindPopup(storm.name);
 
-                const p = L.polyline(storm.path, { color: cat.color, weight: 2.5, dashArray: '5, 10', opacity: 0.5 }).addTo(map);
-                polylines[storm.id] = p;
+                // Main Path
+                polylines[storm.id] = L.polyline(storm.path, { 
+                    color: cat.color, weight: 3, opacity: 0.6, dashArray: '8, 12' 
+                }).addTo(map);
+
+                // Ensembles (Spaghetti)
+                const ensembleGroup = [];
+                generateEnsemblePaths(storm).forEach(path => {
+                    const l = L.polyline(path, { color: cat.color, weight: 1, opacity: 0.15 }).addTo(map);
+                    ensembleGroup.push(l);
+                });
+                ensembles[storm.id] = ensembleGroup;
             });
 
-            // Handle Emergency Banners (Red < 400km, Yellow < 850km)
+            // Emergency Banner Logic
             const banner = document.getElementById('emergency-banner');
             const container = document.getElementById('banner-container');
-            const iconBg = document.getElementById('banner-icon-bg');
-            const textSecondary = document.getElementById('banner-text-secondary');
-
-            if (minDistance <= 400) {
+            if (closestDist < 450) {
                 banner.classList.remove('hidden');
-                container.className = "glass-panel px-6 py-4 rounded-2xl flex items-center gap-4 shadow-[0_0_30px_rgba(239,68,68,0.3)] border-red-500/50 border-2 transition-all";
-                iconBg.className = "bg-red-500 p-2 rounded-full animate-pulse";
-                textSecondary.innerText = "කාලගුණ විද්‍යා දෙපාර්තමේන්තුවේ උපදෙස් සහ ප්‍රාදේශීය පුවත් අනුගමනය කරන්න.";
-                textSecondary.className = "text-red-400 text-[10px] uppercase tracking-widest font-black mt-1";
-            } else if (minDistance <= 850) {
+                setTimeout(() => banner.style.opacity = "1", 100);
+                container.style.borderColor = "#ef444450";
+                document.getElementById('banner-icon-bg').style.backgroundColor = "#ef4444";
+                document.getElementById('banner-text-en').innerText = `Critical Proximity: ${closestDist}km to Coastline`;
+            } else if (closestDist < 850) {
                 banner.classList.remove('hidden');
-                container.className = "glass-panel px-6 py-4 rounded-2xl flex items-center gap-4 shadow-[0_0_20px_rgba(234,179,8,0.2)] border-yellow-500/30 border-2 blink-yellow transition-all";
-                iconBg.className = "bg-yellow-500 p-2 rounded-full animate-pulse";
-                textSecondary.innerText = "කාලගුණ විද්‍යා දෙපාර්තමේන්තුවේ උපදෙස් සහ ප්‍රාදේශීය පුවත් අනුගමනය කරන්න.";
-                textSecondary.className = "text-yellow-400 text-[10px] uppercase tracking-widest font-black mt-1";
+                setTimeout(() => banner.style.opacity = "1", 100);
+                container.style.borderColor = "#f59e0b50";
+                document.getElementById('banner-icon-bg').style.backgroundColor = "#f59e0b";
+                document.getElementById('banner-text-en').innerText = `Monitoring Range: ${closestDist}km from SL`;
             } else {
-                banner.classList.add('hidden');
+                banner.style.opacity = "0";
+                setTimeout(() => banner.classList.add('hidden'), 500);
             }
 
-            const activeCount = document.getElementById('active-count');
-            if(activeCount) activeCount.innerText = storms.length;
+            document.getElementById('active-count').innerText = storms.length;
             lucide.createIcons();
         }
 
         function focusStorm(storm) {
-            map.flyTo([storm.lat, storm.lon], 6);
+            map.flyTo([storm.lat, storm.lon], 6, { duration: 1.5 });
             const hud = document.getElementById('hud-overlay');
-            const cat = getCategoryData(storm.wind);
-            const distToSL = getDistance(storm.lat, storm.lon, SRI_LANKA_COORDS[0], SRI_LANKA_COORDS[1]);
-            
-            hud.style.opacity = "1";
-            hud.style.transform = "translateX(0)";
-            hud.style.pointerEvents = "auto";
+            const cat = getStormCategory(storm.wind);
+            const dist = getDistance(storm.lat, storm.lon, SRI_LANKA[0], SRI_LANKA[1]);
+
+            hud.classList.add('hud-active');
             
             document.getElementById('focus-name').innerText = storm.name;
             document.getElementById('focus-basin').innerText = storm.basin;
             document.getElementById('focus-wind').innerText = storm.wind;
             document.getElementById('focus-pressure').innerText = storm.pressure;
-            document.getElementById('focus-coords').innerText = `${storm.lat.toFixed(2)}N ${storm.lon.toFixed(2)}E`;
+            document.getElementById('focus-distance').innerText = `${dist} km`;
+            document.getElementById('focus-coords').innerText = `${storm.lat.toFixed(1)}°N ${storm.lon.toFixed(1)}°E`;
             document.getElementById('focus-trend').innerText = storm.trend;
-            document.getElementById('focus-distance').innerText = `${distToSL} km`;
-            document.getElementById('focus-icon').style.color = cat.color;
             
-            addLog(`Tracking ${storm.name}: ${distToSL}km from SL.`);
+            if(window.innerWidth < 1024) toggleSidebar();
+            addLog(`Analyzing ${storm.name}... Targeting coordinates.`, true);
         }
 
-        function autonomousScan() {
-            const syncIcon = document.getElementById('sync-icon');
-            if(syncIcon) syncIcon.classList.add('animate-spin');
-            
-            addLog("Global Sync: Parsing model ensembles...");
-
-            storms.forEach(s => {
-                s.lat += (Math.random() * 0.12) - 0.04;
-                s.lon -= (Math.random() * 0.18) - 0.05; 
-                s.path.push([s.lat, s.lon]);
-                
-                if (Math.random() > 0.5) {
-                    s.wind += Math.floor(Math.random() * 4);
-                    s.pressure -= 1;
-                    s.trend = "Deepening";
-                }
-            });
-
-            if (Math.random() > 0.95 && storms.length < 5) {
-                const id = Math.random().toString(36).substring(7).toUpperCase();
-                storms.push({
-                    id: id,
-                    name: `Invest ${id}`,
-                    lat: 4 + (Math.random() * 5),
-                    lon: 88 + (Math.random() * 10),
-                    wind: 25,
-                    pressure: 1008,
-                    basin: 'North Indian',
-                    trend: 'Initializing',
-                    path: [[5, 90]]
-                });
-                addLog(`NEW ALERT: System detected in Bay of Bengal`, 'ALERT');
-            }
-
-            refreshUI();
-            const timeString = new Date().toLocaleTimeString();
-            const lastSync = document.getElementById('last-sync');
-            const headerUpdate = document.getElementById('last-updated-time');
-            if(lastSync) lastSync.innerText = `SYNC: ${timeString} UTC`;
-            if(headerUpdate) headerUpdate.innerText = `Updated: ${timeString}`;
-            
-            if(syncIcon) setTimeout(() => syncIcon.classList.remove('animate-spin'), 1000);
+        function closeHud() {
+            document.getElementById('hud-overlay').classList.remove('hud-active');
         }
 
         function manualSync() {
-            autonomousScan();
+            const icon = document.getElementById('sync-icon');
+            icon.classList.add('animate-spin');
+            
+            addLog("Executing manual recalibration...");
+            
+            // Simulation of data change (drift)
+            storms.forEach(s => {
+                s.lat += (Math.random() * 0.05);
+                s.lon -= (Math.random() * 0.1);
+                s.path.push([s.lat, s.lon]);
+                if(Math.random() > 0.8) s.wind += 1;
+            });
+
+            setTimeout(() => {
+                updateUI();
+                icon.classList.remove('animate-spin');
+                const time = new Date().toLocaleTimeString();
+                document.getElementById('last-sync').innerText = `LATEST SYNC: ${time}`;
+            }, 800);
         }
 
         window.onload = () => {
-            refreshUI();
-            setInterval(autonomousScan, 20000);
-            const timeString = new Date().toLocaleTimeString();
-            const lastSync = document.getElementById('last-sync');
-            const headerUpdate = document.getElementById('last-updated-time');
-            if(lastSync) lastSync.innerText = `SYNC: ${timeString} UTC`;
-            if(headerUpdate) headerUpdate.innerText = `Updated: ${timeString}`;
+            updateUI();
+            addLog("System initialized. Satellite links established.");
+            
+            // Auto-refresh simulation
+            setInterval(() => {
+                manualSync();
+            }, 30000);
         };
     </script>
 </body>
